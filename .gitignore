@@ -1,3 +1,6 @@
+*.lss
+*.eep
+
 # Prerequisites
 *.d
 
