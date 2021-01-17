@@ -69,7 +69,7 @@ size: ${TARGET}
 ## Clean target
 .PHONY: clean
 clean:
-	-rm -rf $(OBJECTS) avrboot.elf avrboot.hex avrboot.eep avrboot.lss avrboot.map
+	-rm -rf $(OBJECTS) avrboot.elf avrboot.hex avrboot.eep avrboot.lss avrboot.map $(OBJECTS).d
 
 ## AVRDude Programming
 program: avrboot.hex
