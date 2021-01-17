@@ -46,7 +46,7 @@ LINKONLYOBJECTS =
 all: $(TARGET) avrboot.hex avrboot.eep avrboot.lss size
 
 ## Compile
-avrboot.o: avrboot.S
+avrboot.o: avrboot.asm
 	$(CC) $(INCLUDES) $(ASMFLAGS) -c  $<
 
 ##Link
@@ -76,3 +76,5 @@ program: avrboot.hex
 	avrdude -C avrdude.conf -c dragon_isp -p m8 -P usb -e -U flash:w:avrboot.hex -U lfuse:w:0xa4:m -U hfuse:w:0xc4:m
 	sleep 2
 	avrdude -C avrdude.conf -c dragon_isp -p m8 -P usb -U hfuse:w:0x44:m
+
+# avrdude -c avr109 -p m8 -P /dev/ttyUSB1 -C avrdude.conf -b 19200 -U eeprom:r:read.hex:i
