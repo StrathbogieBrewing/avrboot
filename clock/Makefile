@@ -1,12 +1,14 @@
 ###############################################################################
-# Makefile for the project avrboot
+# Makefile for the project clock
 ###############################################################################
 
 ## General Flags
-PROJECT = avrboot
+PROJECT = clock
 MCU = atmega8
-TARGET = avrboot.elf
+TARGET = $(PROJECT).elf
 CC = avr-gcc
+
+MCU_FREQ = 8000000
 
 CPP = avr-g++
 
@@ -25,7 +27,7 @@ ASMFLAGS += -x assembler-with-cpp -Wa,-gdwarf2
 
 ## Linker flags
 LDFLAGS = $(COMMON)
-LDFLAGS += -nodefaultlibs -nostartfiles  -Wl,--section-start=.text=0x1E00 -Wl,-Map=avrboot.map
+LDFLAGS +=  -Wl,-Map=$(PROJECT).map
 
 
 ## Intel Hex file production flags
@@ -37,17 +39,17 @@ HEX_EEPROM_FLAGS += --change-section-lma .eeprom=0 --no-change-warnings
 
 
 ## Objects that must be built in order to link
-OBJECTS = avrboot.o
+OBJECTS = $(PROJECT).o
 
 ## Objects explicitly added by the user
 LINKONLYOBJECTS =
 
 ## Build
-all: $(TARGET) avrboot.hex avrboot.eep avrboot.lss size
+all: $(TARGET) $(PROJECT).hex $(PROJECT).eep $(PROJECT).lss size
 
 ## Compile
-avrboot.o: avrboot.asm
-	$(CC) $(INCLUDES) $(ASMFLAGS) -c  $<
+$(PROJECT).o: $(PROJECT).c
+	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
 ##Link
 $(TARGET): $(OBJECTS)
@@ -69,12 +71,12 @@ size: ${TARGET}
 ## Clean target
 .PHONY: clean
 clean:
-	-rm -rf $(OBJECTS) avrboot.elf avrboot.hex avrboot.eep avrboot.lss avrboot.map $(OBJECTS).d
+	-rm -rf $(OBJECTS) $(PROJECT).elf $(PROJECT).hex $(PROJECT).eep $(PROJECT).lss $(PROJECT).map $(OBJECTS).d
 
 ## AVRDude Programming
-program: avrboot.hex
-	avrdude -C ../avrdude.conf -c dragon_isp -p m8 -P usb -e -U flash:w:avrboot.hex -U lfuse:w:0xe4:m -U hfuse:w:0xc4:m
-	sleep 2
-	# avrdude -C ../avrdude.conf -c dragon_isp -p m8 -P usb -U hfuse:w:0x44:m
+program: $(PROJECT).hex
+	# avrdude -C avrdude.conf -c dragon_isp -p m8 -P usb -e -U flash:w:$(PROJECT).hex -U lfuse:w:0xa4:m -U hfuse:w:0xc4:m
+	# sleep 2
+	# avrdude -C avrdude.conf -c dragon_isp -p m8 -P usb -U hfuse:w:0x44:m
 
-# avrdude -c avr109 -p m8 -P /dev/ttyUSB1 -C ../avrdude.conf -b 19200 -U eeprom:r:read.hex:i
+	avrdude -c avr109 -p m8 -P /dev/ttyUSB0 -C ../avrdude.conf -b 19200 -U flash:w:$(PROJECT).hex:i
