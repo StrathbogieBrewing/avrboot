@@ -3,7 +3,7 @@
 ; this bootloader is compatible with avrdude and avrprog.
 ; it is broadly based on the avr 109 format
 ; first program the micro with this code in ISP mode
-; rc oscillator calibrated to 8 MHz from 32.768 KHz external crystal
+; rc oscillator calibrated to 921.6 kHz from 32.768 KHz external crystal
 
 #define		BOOTSTART 	0x0F00
 #define		ZERO		R4
@@ -59,23 +59,23 @@ calibrateWaitStart:
 	andi	TEMPH, 0x07
 	breq	calibrateWaitStart
 
-	; loop is executed for 3 periods of external 32.768 kHz clock or 732.42 clock cycles @ 8.0 MHz
-	; count should be 732.42 / 5 = 146.5 counts, 2.5 cylcles average latency = 146 counts
+	; loop is executed for 31 periods of external 32.768 kHz clock or 871.875 clock cycles @ 921.6 kHz
+	; count should be 871.875 / 5 = 174.375 counts, 2.5 cylcles average latency = 174 counts
 calibrateTimerLoop:
 	in		TEMPH, _SFR_IO_ADDR(TCNT2)
 	inc		TEMPL
-	andi	TEMPH, 0x04
+	andi	TEMPH, 0x20
 	breq	calibrateTimerLoop
 	ldi		TEMPH, 0
 
-	; aim for target of 145 or 146 counts, average error is zero and allows for OSCCAL step size
+	; aim for target of 173 or 175 counts, average error is zero and allows for OSCCAL step size
 calibrateSlow:
-	cpi		TEMPL, 145
+	cpi		TEMPL, 173
 	brsh	calibrateFast
 	ldi		TEMPH, 1
 
 calibrateFast:
-	cpi		TEMPL, 147
+	cpi		TEMPL, 175
 	brlo	calibrateDone
 	ldi		TEMPH, -1
 
@@ -100,11 +100,11 @@ startBootloader:
 
 ; *** calibrate rc clock routine ***
 	; set ASSR for async clock
-    ldi		TEMPH, (1 << AS2)
-    out		_SFR_IO_ADDR(ASSR), TEMPH
+  ldi		TEMPH, (1 << AS2)
+  out		_SFR_IO_ADDR(ASSR), TEMPH
 	; set timer 2 with no prescaling in CTC mode
 	ldi		TEMPH, (1 << CS20)
-    out		_SFR_IO_ADDR(TCCR2), TEMPH
+  out		_SFR_IO_ADDR(TCCR2), TEMPH
 
 calibrationLoop:
 	rcall	calibrate
@@ -114,7 +114,7 @@ calibrationLoop:
 ; *** initialise uart ***
 inituart:
 	; set baud rate to 19200 bps
-	ldi     TEMP, 25
+	ldi     TEMP, 2
 	out     _SFR_IO_ADDR(UBRRL), TEMP
 	; enable tx and rx
 	ldi     TEMP, ((1 << RXEN) | (1 << TXEN))

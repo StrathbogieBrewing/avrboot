@@ -71,9 +71,15 @@ size: ${TARGET}
 clean:
 	-rm -rf $(OBJECTS) avrboot.elf avrboot.hex avrboot.eep avrboot.lss avrboot.map $(OBJECTS).d
 
+# default LFUSE 1 MHZ Internal RC, No brown out
+LFUSE = 0xE1
+
+# change HFUSE for 512 bytes of boot memory and move reset vector to boot memory
+HFUSE = 0xDC
+
 ## AVRDude Programming
 program: avrboot.hex
-	avrdude -C ../avrdude.conf -c dragon_isp -p m8 -P usb -e -U flash:w:avrboot.hex -U lfuse:w:0xe4:m -U hfuse:w:0xc4:m
+	avrdude -C ../avrdude.conf -c dragon_isp -p m8 -P usb -e -U flash:w:avrboot.hex -U lfuse:w:$(LFUSE):m -U hfuse:w:$(HFUSE):m
 	sleep 2
 	# avrdude -C ../avrdude.conf -c dragon_isp -p m8 -P usb -U hfuse:w:0x44:m
 

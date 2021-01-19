@@ -1,4 +1,4 @@
-#define F_CPU 8000000UL
+#define F_CPU 921600UL
 
 #include <avr/interrupt.h>
 #include <avr/io.h>
@@ -17,11 +17,6 @@ typedef struct {
 time t;
 
 static void init(void) {
-  // Wait for external clock crystal to stabilize;
-  // for (uint8_t i = 0; i < 0x40; i++) {
-  //   for (int j = 0; j < 0xFFFF; j++)
-  //     ;
-  // }
 
   _delay_ms(1000);
   // DDRB = 0xFF;											//Configure all eight pins of

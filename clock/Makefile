@@ -8,7 +8,7 @@ MCU = atmega8
 TARGET = $(PROJECT).elf
 CC = avr-gcc
 
-MCU_FREQ = 8000000
+MCU_FREQ = 921600
 
 CPP = avr-g++
 
