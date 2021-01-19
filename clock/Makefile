@@ -19,6 +19,7 @@ COMMON = -mmcu=$(MCU)
 CFLAGS = $(COMMON)
 CFLAGS += -Wall -gdwarf-2 -std=gnu99 -Os -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums
 CFLAGS += -MD -MP -MT $(*F).o -MF $(@F).d
+CFLAGS += -DF_CPU=$(MCU_FREQ)
 
 ## Assembly specific flags
 ASMFLAGS = $(COMMON)

@@ -6,9 +6,10 @@
 PROJECT = avrboot
 MCU = atmega8
 TARGET = avrboot.elf
-CC = avr-gcc
 
+CC = avr-gcc
 CPP = avr-g++
+
 
 ## Options common to compile, link and assembly rules
 COMMON = -mmcu=$(MCU)
@@ -17,6 +18,7 @@ COMMON = -mmcu=$(MCU)
 CFLAGS = $(COMMON)
 CFLAGS += -Wall -gdwarf-2 -std=gnu99 -Os -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums
 CFLAGS += -MD -MP -MT $(*F).o -MF $(@F).d
+
 
 ## Assembly specific flags
 ASMFLAGS = $(COMMON)
