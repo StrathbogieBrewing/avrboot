@@ -124,7 +124,7 @@ inituart:
 ; *** send subroutine (value in TEMP) ***
 uartPut:
   ; force half duplex to block any echo if connected to a bus
-  cbi		_SFR_IO_ADDR(UCSRB), RXEN		// disable rx
+  cbi		_SFR_IO_ADDR(UCSRB), RXEN		; disable rx
 
 	out    _SFR_IO_ADDR(UDR), TEMP
 uartTxLoop:
@@ -132,7 +132,7 @@ uartTxLoop:
 	rjmp   uartTxLoop
 	sbi    _SFR_IO_ADDR(UCSRA), TXC
 
-  sbi		_SFR_IO_ADDR(UCSRB), RXEN		// enable rx
+  sbi		_SFR_IO_ADDR(UCSRB), RXEN		; enable rx
 
 	ret
 
@@ -182,7 +182,7 @@ readBlock:
 	cpi		RXCHAR, 'g'
 	brne	writeBlock
 	rcall	uartGet
-	ldi		TEMPH, 0			// limit buffer size to 256 characters
+	ldi		TEMPH, 0			; limit buffer size to 256 characters
 	rcall	uartGet
 	mov		TEMPL, RXCHAR
 	rcall	uartGet
@@ -226,7 +226,7 @@ writeBlock:
 
 writeGetParams:
 	rcall	uartGet
-	ldi		TEMPH, 0					// limit buffer size to 256 characters
+	ldi		TEMPH, 0					; limit buffer size to 256 characters
 	rcall	uartGet
 	mov		TEMPL, RXCHAR
 	rcall	uartGet
@@ -278,7 +278,7 @@ writeFlash:
 writeFlashLoop:
 	ld		R0, Y+
 	ld		R1, Y+
-	ldi 	TEMP, (1<<SPMEN)					// copy word to flash write buffer
+	ldi 	TEMP, (1<<SPMEN)					; copy word to flash write buffer
 	rcall	writeFlashSPM
 	adiw	ZL, 2
 	adiw	ADDRL, 1
@@ -291,10 +291,10 @@ writeFlashLoop:
 
 
 writeFlashSPM:
-	in 		STATUS, _SFR_IO_ADDR(SPMCR)			// check for previous SPM complete
+	in 		STATUS, _SFR_IO_ADDR(SPMCR)			; check for previous SPM complete
 	sbrc 	STATUS, SPMEN
 	rjmp 	writeFlashSPM
-	out 	_SFR_IO_ADDR(SPMCR), TEMP			// execute spm with action given by TEMP
+	out 	_SFR_IO_ADDR(SPMCR), TEMP			; execute spm with action given by TEMP
 	spm
 	ret
 
@@ -328,7 +328,7 @@ setAddress:
 	rjmp	uartPutReturnAndMainLoop
 
 eraseChip:
-	cpi		RXCHAR, 'e'							// dont do anything because we erase page by page
+	cpi		RXCHAR, 'e'							; dont do anything because we erase page by page
 	brne	exitBootloader
 	rjmp	uartPutReturnAndMainLoop
 
