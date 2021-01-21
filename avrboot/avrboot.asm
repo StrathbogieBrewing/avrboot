@@ -4,6 +4,7 @@
 ; it is broadly based on the avr 109 format
 ; first program the micro with this code in ISP mode
 ; rc oscillator calibrated to 921.6 kHz from 32.768 KHz external crystal
+; baud rate 19200 bps
 
 #define		BOOTSTART 	0x0F00
 #define		ZERO		R4
